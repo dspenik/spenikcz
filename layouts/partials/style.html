@@ -1,0 +1,304 @@
+<style>
+{{ if .IsHome }}
+{{- $default_style := resources.Get "sass/default.scss" | css.Sass | minify -}}
+{{- $default_style.Content | safeCSS -}}
+{{ else }}
+{{- $activity_style := resources.Get "sass/activity.scss" | css.Sass | minify -}}
+{{- $activity_style.Content | safeCSS -}}
+{{ end }}
+
+{{ $terminal_style := "" }}
+{{ with (eq .Site.Params.Terminal.scheme "shell-powershell") }}
+    {{- $powershellStyle := resources.Get "sass/powershell.scss" | css.Sass | minify -}}
+    {{- $terminal_style = $powershellStyle.Content -}}
+{{ end }}
+{{ with (eq .Site.Params.Terminal.scheme "shell-ubuntu") }}
+    {{- $ubuntuStyle := resources.Get "sass/ubuntu.scss" | css.Sass | minify -}}
+    {{- $terminal_style = $ubuntuStyle.Content -}}
+{{ end }}
+{{ with (eq .Site.Params.Terminal.scheme "shell-retro") }}
+    {{- $retroStyle := resources.Get "sass/retro.scss" | css.Sass | minify -}}
+    {{- $terminal_style = $retroStyle.Content -}}
+{{ end }}
+
+{{/*  Load Gogh themes from remote  */}}
+{{ if eq $terminal_style "" }}
+    {{ $themeDataResource := resources.GetRemote "https://raw.githubusercontent.com/Mayccoll/Gogh/master/data/themes.json" }}
+    {{ if $themeDataResource }}
+      {{ $themeData := $themeDataResource | transform.Unmarshal }}
+      {{ range $t := $themeData }}
+        {{if eq $t.name $.Site.Params.Terminal.scheme }}
+          {{ $terminal_style = printf "body{background:%s}body #terminal{color:%s}body #user{color:%s}body #dir{color:%s}body .Typewriter__cursor{color:%s}a{color:%s;text-decoration:underline}a:hover{color:%s;text-decoration:underline}a:visited{color:%s}" $t.background $t.foreground $t.color_11 $t.color_15 $t.cursor $t.color_13 $t.color_14 $t.color_06 }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+{{ end }}
+
+{{ $terminal_style | safeCSS }}
+
+
+/* ============================================
+   RESPONSIVE FOOTER STYLES
+   ============================================ */
+
+.navFull {
+    background-color: #353535;
+    font-family: "Courier New", "Courier", monospace;
+    font-size: 17px;
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 10px 0;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navCredits {
+    padding-bottom: 10px;
+    padding-top: 5px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Ensure footer links meet minimum touch target size */
+.navCredits a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 4px 2px;
+    min-height: 44px;
+    line-height: 28px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.navCredits a:hover,
+.navCredits a:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    outline: 2px solid rgba(255, 255, 255, 0.3);
+    outline-offset: 2px;
+}
+
+/* Add bottom padding to content to prevent footer overlap */
+#content {
+    padding-bottom: 100px;
+}
+
+#content::after {
+    content: "\a\a";
+    white-space: pre;
+}
+
+/* ============================================
+   MOBILE-FIRST RESPONSIVE STYLES
+   ============================================ */
+
+/* Extra Small Mobile Devices (320px - 479px) */
+@media only screen and (max-width: 479px) {
+    .navFull {
+        font-size: 14px;
+        padding: 8px 8px 0;
+    }
+
+    .navCredits {
+        font-size: 14px;
+        padding: 8px 4px;
+        line-height: 1.8;
+    }
+
+    .navCredits a {
+        display: block;
+        margin: 6px auto;
+        max-width: 280px;
+        padding: 12px 16px;
+        min-height: 44px;
+        text-align: center;
+    }
+
+    /* Ensure content has enough bottom padding for stacked footer */
+    #content {
+        padding-bottom: 180px;
+    }
+
+    /* Make SVG icons larger on very small screens */
+    img[width="16"][height="16"] {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+}
+
+/* Small Mobile Devices (480px - 767px) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .navFull {
+        font-size: 15px;
+        padding: 10px 10px 0;
+    }
+
+    .navCredits {
+        font-size: 15px;
+        padding: 10px 8px;
+    }
+
+    .navCredits a {
+        padding: 10px 14px;
+        margin: 4px 4px;
+    }
+
+    #content {
+        padding-bottom: 120px;
+    }
+
+    /* Scale SVG icons appropriately */
+    img[width="16"][height="16"] {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+}
+
+/* Tablets and Small Desktops (768px - 1023px) */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+    .navFull {
+        font-size: 16px;
+        padding: 12px 16px 0;
+    }
+
+    .navCredits {
+        font-size: 16px;
+        padding: 10px 8px;
+    }
+
+    .navCredits a {
+        padding: 10px 16px;
+        margin: 4px 6px;
+    }
+
+    #content {
+        padding-bottom: 100px;
+    }
+
+    img[width="16"][height="16"] {
+        width: 18px;
+        height: 18px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
+}
+
+/* Desktop (1024px - 1919px) */
+@media only screen and (min-width: 1024px) and (max-width: 1919px) {
+    .navFull {
+        font-size: 17px;
+        padding: 12px 20px 0;
+    }
+
+    .navCredits {
+        padding: 10px;
+    }
+
+    .navCredits a {
+        padding: 8px 12px;
+        margin: 4px 6px;
+    }
+
+    #content {
+        padding-bottom: 100px;
+    }
+
+    img[width="16"][height="16"] {
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+    }
+}
+
+/* Large Displays - 2K (1920px - 2559px) */
+@media only screen and (min-width: 1920px) and (max-width: 2559px) {
+    .navFull {
+        font-size: 18px;
+        padding: 14px 24px 0;
+    }
+
+    .navCredits {
+        padding: 12px;
+    }
+
+    #content {
+        padding-bottom: 110px;
+    }
+
+    img[width="16"][height="16"] {
+        width: 18px;
+        height: 18px;
+        vertical-align: middle;
+    }
+}
+
+/* Ultra-Wide and 4K Displays (2560px+) */
+@media only screen and (min-width: 2560px) {
+    .navFull {
+        font-size: 20px;
+        padding: 16px 32px 0;
+    }
+
+    .navCredits {
+        padding: 14px;
+        font-size: 20px;
+    }
+
+    #content {
+        padding-bottom: 120px;
+    }
+
+    img[width="16"][height="16"] {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & PRINT STYLES
+   ============================================ */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .navFull {
+        border-top: 2px solid currentColor;
+    }
+
+    .navCredits a {
+        border: 1px solid currentColor;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .navCredits a {
+        transition: none;
+    }
+}
+
+/* Print styles - hide fixed footer */
+@media print {
+    .navFull {
+        position: static;
+        page-break-after: avoid;
+    }
+
+    #content {
+        padding-bottom: 20px;
+    }
+}
+
+
+</style>
+
+

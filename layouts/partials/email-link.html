@@ -1,0 +1,17 @@
+{{/* Email link partial for templates */}}
+{{/* Usage: {{ partial "email-link.html" (dict "address" "dmitrij@spenik.cz") }} */}}
+
+{{ $address := .address }}
+{{ $parts := split $address "@" }}
+{{ $user := index $parts 0 }}
+{{ $domain := index $parts 1 }}
+{{ $id := printf "email-%s" (substr (md5 $address) 0 8) }}
+
+<span id="{{ $id }}"></span>
+<script>
+(function(){
+    var u='{{ $user }}',d='{{ $domain }}';
+    document.getElementById('{{ $id }}').innerHTML='<a href="mailto:'+u+'@'+d+'">'+u+'@'+d+'</a>';
+})();
+</script>
+<noscript>{{ $user }} [at] {{ $domain }}</noscript>

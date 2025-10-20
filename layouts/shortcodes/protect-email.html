@@ -1,0 +1,18 @@
+{{/* Advanced email protection shortcode */}}
+{{/* Usage: {{< protect-email "dmitrij@spenik.cz" >}} */}}
+
+{{ $address := .Get 0 }}
+{{ $parts := split $address "@" }}
+{{ $user := index $parts 0 }}
+{{ $domain := index $parts 1 }}
+{{ $id := printf "eml-%s" (substr (md5 $address) 0 8) }}
+
+<span class="email-wrapper" id="{{ $id }}"></span>
+<script>
+(function(){
+    var p=['{{ $user }}','{{ $domain }}'];
+    var e=p[0]+'@'+p[1];
+    document.getElementById('{{ $id }}').innerHTML='<a href="mailto:'+e+'">'+e+'</a>';
+})();
+</script>
+<noscript>{{ $user }} [at] {{ $domain }}</noscript>

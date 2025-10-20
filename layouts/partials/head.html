@@ -1,0 +1,11 @@
+<head>
+    <title>{{- if .IsHome }}{{ .Site.Title }}{{- else }}{{ .Title }}{{- end }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="{{if .IsHome}}{{ $.Site.Params.description }}{{else}}{{.Description}}{{end}}" />
+    {{- /* Preconnect to Google Fonts for faster loading */ -}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap">
+    {{ partial "partials/style.html" . }}
+</head>

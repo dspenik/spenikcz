@@ -1,0 +1,30 @@
+// Dracula color scheme
+// https://draculatheme.com/
+
+body {
+    background: #282a36;
+
+    #terminal {
+        color: #f8f8f2;
+    }
+
+    #user {
+        color: #50fa7b;
+    }
+
+    #dir {
+        color: #8be9fd;
+    }
+
+    .Typewriter__cursor {
+        color: #f8f8f2;
+    }
+}
+
+a {
+    color: #bd93f9;
+}
+
+a:hover {
+    color: #ff79c6;
+}
