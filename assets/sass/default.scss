@@ -26,7 +26,10 @@ body {
 
 #content {
     min-width: 82vmin;
+    max-width: 90vw;
     min-height: 82vmin;
+    padding: 0 5vw;
+    box-sizing: border-box;
 }
 
 ::-webkit-scrollbar {
@@ -77,6 +80,8 @@ body {
 
     #content {
         min-width: 60vmin;
+        max-width: 85vw;
+        padding: 0 7.5vw;
     }
 }
 
@@ -90,7 +95,8 @@ body {
 
     #content {
         min-width: 85vmin; /* Slightly wider on very small screens */
-        padding: 10px;
+        max-width: 92vw;
+        padding: 0 4vw;
     }
 
     /* Ensure links are easily tappable */
